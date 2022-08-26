@@ -11,12 +11,16 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Override
     public SiteUser getQslUser(Long id) {
         /*
+        실행하고자 하는 쿼리
+
         SELECT *
         FROM site_user
         WHERE id = 1
         */
 
         /*
+        위에 있는 쿼리를 JPAQueryFactory를 사용한다면 아래와 같이 사용 가능
+
         return jpaQueryFactory
                 .select(QSiteUser.siteUser)
                 .from(QSiteUser.siteUser)
