@@ -5,6 +5,8 @@ import com.ll.exam.qsl.user.entity.SiteUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static com.ll.exam.qsl.user.entity.QSiteUser.siteUser;   // 구문 간소화를 위해 추가
 
 @RequiredArgsConstructor
@@ -54,5 +56,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .orderBy(siteUser.id.asc())
                 .limit(1)
                 .fetchOne();
+    }
+
+    @Override
+    public List<SiteUser> getQslUsersOrderByIdAsc() {
+        return jpaQueryFactory
+                .select(siteUser)
+                .from(siteUser)
+                .orderBy(siteUser.id.asc())
+                .fetch();
     }
 }
