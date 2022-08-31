@@ -1,6 +1,10 @@
 package com.ll.exam.qsl.user.repository;
 
 import com.ll.exam.qsl.user.entity.SiteUser;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -9,6 +13,7 @@ import java.util.function.LongSupplier;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import static com.ll.exam.qsl.user.entity.QSiteUser.siteUser;   // 구문 간소화를 위해 추가
@@ -86,7 +91,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public Page<SiteUser> searchQsl(String kw, Pageable pageable) {
-        List<SiteUser> users = jpaQueryFactory
+        JPAQuery<SiteUser> usersQuery = jpaQueryFactory
                 .select(siteUser)
                 .from(siteUser)
                 .where(
@@ -94,9 +99,16 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .or(siteUser.email.contains(kw))
                 )
                 .offset(pageable.getOffset()) // 몇개를 건너 띄어야 하는지 LIMIT {1}, ?
-                .limit(pageable.getPageSize()) // 한페이지에 몇개가 보여야 하는지 LIMIT ?, {1}
-                .orderBy(siteUser.id.asc())
-                .fetch();
+                .limit(pageable.getPageSize()); // 한페이지에 몇개가 보여야 하는지 LIMIT ?, {1}
+
+        // 쿼리를 알아서 구성해줌 ( ==> pageable.getSort() 에 따라서 orderBy 종류가 달라진다 )
+        for (Sort.Order o : pageable.getSort()) {
+            PathBuilder pathBuilder = new PathBuilder(siteUser.getType(), siteUser.getMetadata());
+            usersQuery.orderBy(new OrderSpecifier(o.isAscending() ? Order.ASC : Order.DESC, pathBuilder.get(o.getProperty())));
+        }
+
+        // 쿼리 구성이 끝난 뒤 fetch 시켜주기
+        List<SiteUser> users = usersQuery.fetch();
 
         LongSupplier totalSupplier = () -> 2;
 
