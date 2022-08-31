@@ -113,5 +113,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         LongSupplier totalSupplier = () -> 2;
 
         return PageableExecutionUtils.getPage(users, pageable, totalSupplier);
+
+        // fetchCount 메서드를 사용해서, 전체 엘리먼트 개수 구하기, 하지만 더 이상 사용하면 안되는 방법
+        // return new PageImpl<>(users, pageable, usersQuery.fetchCount()); // 아래와 거의 동일
+        // return PageableExecutionUtils.getPage(users, pageable, usersQuery::fetchCount);
     }
 }
