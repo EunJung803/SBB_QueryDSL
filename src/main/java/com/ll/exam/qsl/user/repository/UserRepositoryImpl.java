@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
+import static com.ll.exam.qsl.interestKeyword.entity.QInterestKeyword.interestKeyword;
 import static com.ll.exam.qsl.user.entity.QSiteUser.siteUser;   // 구문 간소화를 위해 추가
 
 @RequiredArgsConstructor
@@ -133,13 +134,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         WHERE IK.content = "축구";
          */
 
-        QInterestKeyword IK = new QInterestKeyword("IK");
+//        QInterestKeyword IK = new QInterestKeyword("IK");
 
         return jpaQueryFactory
                 .selectFrom(siteUser)
-                .innerJoin(siteUser.interestKeywords)   // INNER JOIN 하는 부분
+                .innerJoin(siteUser.interestKeywords, interestKeyword)   // INNER JOIN 하는 부분
                 .where(
-                        IK.content.eq(keywordContent)
+                        interestKeyword.content.eq(keywordContent)
                 )
                 .fetch();
     }
