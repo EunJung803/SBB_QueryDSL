@@ -118,4 +118,25 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         // return new PageImpl<>(users, pageable, usersQuery.fetchCount()); // 아래와 거의 동일
         // return PageableExecutionUtils.getPage(users, pageable, usersQuery::fetchCount);
     }
+
+    @Override
+    public List<SiteUser> getQslUsersByInterestKeyword(String keywordContent) {
+        /*
+        # QueryDSL에 의해서 만들어져야 하는 목표 SQL
+        SELECT SU.*
+        FROM site_user AS SU
+        INNER JOIN site_user_interest_keywords AS SUIK
+        ON SU.id = SUIK.site_user_id
+        INNER JOIN interest_keyword AS IK
+        ON IK.content = SUIK.interest_keywords_content
+        WHERE IK.content = "축구";
+         */
+
+
+        return jpaQueryFactory
+                .selectFrom(siteUser)
+                .innerJoin(siteUser.interestKeywords)   // INNER JOIN 하는 부분
+                .fetch();
+    }
+
 }
