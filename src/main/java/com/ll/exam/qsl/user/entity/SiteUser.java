@@ -41,6 +41,10 @@ public class SiteUser {
     }
 
     public void follow(SiteUser following) {
+        if (this == following) return;      // 같은 사람이면 팔로우 X
+        if (following == null) return;      // null이 들어오면 X
+        if (this.getId() == following.getId()) return;      // Id가 같다면 팔로우 X
+
         following.getFollowers().add(this);
     }
 }

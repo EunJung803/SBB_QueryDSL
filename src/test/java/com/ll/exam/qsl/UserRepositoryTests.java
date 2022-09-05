@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -277,5 +278,16 @@ class UserRepositoryTests {
         u1.follow(u2);
 
         userRepository.save(u2);
+    }
+
+    @Test
+    @DisplayName("본인이 본인을 follow 할 수 없다.")
+    @Rollback(false)
+    void t14() {
+        SiteUser u1 = userRepository.getQslUser(1L);
+
+        u1.follow(u1);
+
+        assertThat(u1.getFollowers().size()).isEqualTo(0);
     }
 }
