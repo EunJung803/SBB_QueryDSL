@@ -28,8 +28,8 @@ public class SiteUser {
     private String email;
 
     // 관심사
-    @Builder.Default    // null이 되는걸 막기 위해 추가
-    @ManyToMany(cascade = CascadeType.ALL)      // ManyToMany 관계
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<InterestKeyword> interestKeywords = new HashSet<>();
 
     // 팔로워
@@ -39,7 +39,7 @@ public class SiteUser {
 
     // 팔로잉
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<SiteUser> followings = new HashSet<>();
 
     public void addInterestKeywordContent(String keywordContent) {
@@ -56,5 +56,9 @@ public class SiteUser {
 
         // 내(follower)가 유튜버(following)를 구독한다.
         getFollowings().add(following);
+    }
+
+    public void removeInterestKeywordContent(String keywordContent) {
+        interestKeywords.remove(new InterestKeyword(this, keywordContent));
     }
 }

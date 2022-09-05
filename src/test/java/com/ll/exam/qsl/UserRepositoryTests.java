@@ -45,11 +45,8 @@ class UserRepositoryTests {
                 .build();
 
         userRepository.saveAll(Arrays.asList(u3, u4));
-
-
-//        SiteUser u1 = new SiteUser(null, "user1", "{noop}1234", "user1@test.com");
-//        SiteUser u2 = new SiteUser(null, "user2", "{noop}1234", "user2@test.com");
     }
+
 
     @Test
     @DisplayName("1번 회원 찾기")
@@ -315,5 +312,13 @@ class UserRepositoryTests {
         // following
         // u2가 구독중인 회원 : 0
         assertThat(u2.getFollowings().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("u1은 더 이상 농구에 관심이 없습니다.")
+    void t16() {
+        SiteUser u1 = userRepository.getQslUser(1L);
+
+        u1.removeInterestKeywordContent("농구");
     }
 }

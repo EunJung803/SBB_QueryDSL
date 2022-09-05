@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@IdClass(InterestKeywordId.class)
 public class InterestKeyword {
 
     @Id
