@@ -26,11 +26,21 @@ public class SiteUser {
     @Column(unique = true)
     private String email;
 
+    // 관심사
     @Builder.Default    // null이 되는걸 막기 위해 추가
     @ManyToMany(cascade = CascadeType.ALL)      // ManyToMany 관계
     private Set<InterestKeyword> interestKeywords = new HashSet<>();
 
+    // 팔로워
+    @Builder.Default
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<SiteUser> followers = new HashSet<>();
+
     public void addInterestKeywordContent(String keywordContent) {
         interestKeywords.add(new InterestKeyword(keywordContent));
+    }
+
+    public void follow(SiteUser following) {
+        following.getFollowers().add(this);
     }
 }
