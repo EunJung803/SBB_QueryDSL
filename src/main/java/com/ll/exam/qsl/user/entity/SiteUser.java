@@ -4,6 +4,7 @@ import com.ll.exam.qsl.interestKeyword.entity.InterestKeyword;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,5 +47,9 @@ public class SiteUser {
         if (this.getId() == following.getId()) return;      // Id가 같다면 팔로우 X
 
         following.getFollowers().add(this);
+    }
+
+    public Set<SiteUser> getFollowings() {
+        return new HashSet<>();
     }
 }
